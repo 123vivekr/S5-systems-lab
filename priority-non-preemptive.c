@@ -5,76 +5,77 @@ typedef struct Process
     int pId;
     int arrivalTime;
     int burstTime;
-    int completionTime;
     int turnaroundTime;
     int waitingTime;
+    int priority;
 } Process;
 
-void Sort(Process *, int);
-void display(Process *, int);
-int findShortestJob(Process*,int,int);
+void Sort(Process*,int);
+void display(Process*,int);
+int findhighPriorityJob(Process*,int,int);
+
 
 int main(void)
 {
-    int n, i;
-    int cpuTime = 0;
+     int n, i,j;
+     int cpuTime = 0;
     printf("Enter number of processes: ");
     scanf("%d", &n);
 
     // Array of processes (structures)
     Process process[n];
 
-    printf("\nEnter arrival time and burst time for processes\n");
-    for (i=0;i<n;i++)
+    printf("\nEnter arrival time,burst time and priority for processes\n");
+    for (i = 0; i < n; i++)
     {
-        printf("P[%d]: ", i + 1);
+        printf("P[%d]: ",i+1);
         scanf("%d", &process[i].arrivalTime);
         scanf("%d", &process[i].burstTime);
-        process[i].pId = i + 1;
+        scanf("%d",&process[i].priority);
+        process[i].pId = i+1;
         process[i].waitingTime = 0;
         process[i].turnaroundTime = 0;
     }
 
-    int shortestJobProcess;
+    int highestPriorityProcess;
     int waitingTime = 0;
 
     for(i=0;i<n+1;i++)
     {
         // find the process with shortest job within the cpu time
-        shortestJobProcess = findShortestJob(process,n,cpuTime);
+        highestPriorityProcess = findhighPriorityJob(process,n,cpuTime);
 
-        if(shortestJobProcess == -1)
+        if(highestPriorityProcess == -1)
         {
             waitingTime++;
             cpuTime++;
         }
         else 
         {
-            cpuTime += process[shortestJobProcess].burstTime;
+            cpuTime += process[highestPriorityProcess].burstTime;
 
-            process[shortestJobProcess].waitingTime = waitingTime - process[shortestJobProcess].arrivalTime;
-            waitingTime += process[shortestJobProcess].burstTime;
+            process[highestPriorityProcess].waitingTime = waitingTime - process[highestPriorityProcess].arrivalTime;
+            waitingTime += process[highestPriorityProcess].burstTime;
 
-            process[shortestJobProcess].turnaroundTime = process[shortestJobProcess].waitingTime + process[shortestJobProcess].burstTime;
-            process[shortestJobProcess].arrivalTime = -1;
+            process[highestPriorityProcess].turnaroundTime = process[highestPriorityProcess].waitingTime + process[highestPriorityProcess].burstTime;
+            process[highestPriorityProcess].arrivalTime = -1;
 
             // printf("\nP[%d]",process[shortestJobProcess].pId);
         }
     }
 
     display(process,n);
-
-   
     printf("\n\n");
+
     return 0;
 }
 
 
-int findShortestJob(Process *process,int n,int cpuTime)
+int findhighPriorityJob(Process *process,int n,int cpuTime)
 {
-    int i,shortJob,flag=1;
-    int shortJobFound = 0;
-    int shortestJobProcess;
+    int i,priorityJob,flag=1;
+    int highPriorityFound = 0;
+    int highPriorityProcess;
 
     for(i=0;i<n;i++)
     {
@@ -82,27 +83,28 @@ int findShortestJob(Process *process,int n,int cpuTime)
         {
             if(flag)
             {
-                shortJob = process[i].burstTime;
-                shortestJobProcess = i;
+                priorityJob = process[i].priority;
+                highPriorityProcess = i;
                 flag = 0;
             }
             else
             {
-                if(process[i].burstTime < shortJob)
+                if(process[i].priority > priorityJob)
                 {
-                    shortJob = process[i].burstTime;
-                    shortestJobProcess = i;
+                    priorityJob = process[i].priority;
+                    highPriorityProcess = i;
                 }   
             }
-            shortJobFound = 1;        
+            highPriorityFound = 1;        
         }
     }
 
-    if(shortJobFound)
-        return shortestJobProcess;
+    if(highPriorityFound)
+        return highPriorityProcess;
     else
         return -1;
 }
+
 
 void display(Process *proc,int n)
 {
