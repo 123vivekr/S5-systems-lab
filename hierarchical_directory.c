@@ -36,7 +36,7 @@ void touch(bool d)
         printf("Enter filename\n");
     char fname[128];
     scanf("%s", fname);
-    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    struct node *temp = (struct node *)malloc(sizeof(struct node)); // Dynamic memory allocation is used in this
     strcpy(temp->name, fname);
     temp->isDir = d;
     temp->p = curr;
