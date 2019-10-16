@@ -52,17 +52,17 @@ void main()
     printf("Enter starting location of head\n");
     int start;
     scanf("%d", &start);
-    printf("Enter maximum possible location index\n");
+    printf("Enter maximum possible locations index\n");
     int max;
     scanf("%d", &max);
-    printf("Enter the %d locations on the disk to access data from\n", n);
+    printf("Enter the %d locations on the disk to access data from \n", n);
     int locs[n];
     for (int i = 0; i < n; i++)
     {
         scanf("%d", locs + i);
         if (*(locs + i) > max)
         {
-            printf("ERROR: Location greater than maximum location possible\n");
+            printf("ERROR: Location is greater than maximum location possible\n");
             return;
         }
     }
